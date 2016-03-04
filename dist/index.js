@@ -1,13 +1,13 @@
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Dimensions;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.Dimensions = exports.Format = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Dimensions;
 
 var _react = require('react');
 
@@ -30,6 +30,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; } /**
                                                                                                                                                                                                                    * https://developers.google.com/doubleclick-gpt/reference
                                                                                                                                                                                                                   */
+
 
 var Format = exports.Format = (0, _keymirror2.default)({
   HORIZONTAL: null,
@@ -176,6 +177,7 @@ var GooglePublisherTag = function (_Component) {
       var minWindowWidth = props.minWindowWidth;
       var maxWindowWidth = props.maxWindowWidth;
 
+
       if (minWindowWidth !== -1 && minWindowWidth < windowWidth) {
         dimensions = [];
       } else if (maxWindowWidth !== -1 && maxWindowWidth > windowWidth) {
@@ -189,9 +191,11 @@ var GooglePublisherTag = function (_Component) {
 
       this.currentDimensions = dimensions;
 
-      if (this.slot) {
+      if (this.slot && !props.sizeMap) {
         // remove current slot because dimensions is changed and current slot is old
         this.removeSlot();
+      } else if (this.slot && props.sizeMap) {
+        googletag.pubads().refresh([this.slot]);
       }
 
       // there is nothink to display
@@ -204,17 +208,22 @@ var GooglePublisherTag = function (_Component) {
         return;
       }
 
-      // prepare new node
-      var id = getNextID();
-      this.refs.holder.innerHTML = '<div id="' + id + '"></div>';
+      if (!this.slot) {
+        // prepare new node
+        var id = getNextID();
+        this.refs.holder.innerHTML = '<div id="' + id + '"></div>';
 
-      // prepare new slot
-      var slot = this.slot = googletag.defineSlot(props.path, dimensions, id);
-      slot.addService(googletag.pubads());
+        // prepare new slot
+        var slot = this.slot = googletag.defineSlot(props.path, dimensions, id).addService(googletag.pubads());
 
-      // display new slot
-      googletag.display(id);
-      googletag.pubads().refresh([slot]);
+        if (props.sizeMap) {
+          slot.defineSizeMapping(props.sizeMap);
+        }
+
+        // display new slot
+        googletag.display(id);
+        googletag.pubads().refresh([slot]);
+      }
     }
   }, {
     key: 'removeSlot',
@@ -254,6 +263,7 @@ GooglePublisherTag.propTypes = {
   responsive: _react2.default.PropTypes.bool.isRequired,
   canBeLower: _react2.default.PropTypes.bool.isRequired, // can be ad lower than original size,
 
+  sizeMap: _react2.default.PropTypes.array,
   dimensions: _react2.default.PropTypes.array, // [[300, 600], [160, 600]]
 
   minWindowWidth: _react2.default.PropTypes.number.isRequired,

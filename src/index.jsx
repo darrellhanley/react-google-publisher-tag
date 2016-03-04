@@ -67,6 +67,11 @@ function initGooglePublisherTag() {
 
     // enable google publisher tag
     googletag.enableServices();
+
+    // check to see if iFrame, then if so, set url to parent
+    if(window.frameElement){
+      googletag.pubads().set('page_url', window.parent.location.href);
+    }
   });
 
   (function loadScript() {
@@ -88,6 +93,7 @@ export default class GooglePublisherTag extends Component {
     responsive: React.PropTypes.bool.isRequired,
     canBeLower: React.PropTypes.bool.isRequired, // can be ad lower than original size,
 
+    sizeMap: React.PropTypes.array,
     dimensions: React.PropTypes.array,  // [[300, 600], [160, 600]]
 
     minWindowWidth: React.PropTypes.number.isRequired,
@@ -167,9 +173,11 @@ export default class GooglePublisherTag extends Component {
     this.currentDimensions = dimensions;
 
 
-    if (this.slot) {
+    if (this.slot && !props.sizeMap) {
       // remove current slot because dimensions is changed and current slot is old
       this.removeSlot();
+    } else if (this.slot && props.sizeMap) {
+      googletag.pubads().refresh([this.slot]);
     }
 
     // there is nothink to display
@@ -182,17 +190,22 @@ export default class GooglePublisherTag extends Component {
       return;
     }
 
-    // prepare new node
-    const id = getNextID();
-    this.refs.holder.innerHTML = `<div id="${id}"></div>`;
+    if (!this.slot) {
+      // prepare new node
+      const id = getNextID();
+      this.refs.holder.innerHTML = `<div id="${id}"></div>`;
 
-    // prepare new slot
-    const slot = this.slot = googletag.defineSlot(props.path, dimensions, id);
-    slot.addService(googletag.pubads());
+      // prepare new slot
+      const slot = this.slot = googletag.defineSlot(props.path, dimensions, id).addService(googletag.pubads());
 
-    // display new slot
-    googletag.display(id);
-    googletag.pubads().refresh([slot]);
+      if(props.sizeMap) {
+        slot.defineSizeMapping(props.sizeMap);
+      }
+
+      // display new slot
+      googletag.display(id);
+      googletag.pubads().refresh([slot]);
+    }
   }
 
   removeSlot() {

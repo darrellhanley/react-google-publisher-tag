@@ -57,6 +57,7 @@ var App = module.exports = React.createClass({
 | format         | String    | true      | HORIZONTAL |
 | canBeLower     | Boolean   | true      | true       |
 | dimensions     | Array     | false     |            |
+| sizeMap        | Array     | false     |            |
 | minWindowWidth | Integer   | false     | -1         |
 | maxWindowWidth | Integer   | false     | -1         |
 | className      | String    | false     |            |
