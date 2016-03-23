@@ -88,6 +88,11 @@ function initGooglePublisherTag() {
 
     // enable google publisher tag
     googletag.enableServices();
+
+    // check to see if iFrame, then if so, set url to parent
+    if (window.frameElement) {
+      googletag.pubads().set('page_url', window.parent.location.href);
+    }
   });
 
   (function loadScript() {
@@ -151,6 +156,7 @@ var GooglePublisherTag = function (_Component) {
       }
 
       this.removeSlot();
+      googletag.destroySlots([this.slot]);
     }
   }, {
     key: 'update',
