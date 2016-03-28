@@ -134,7 +134,6 @@ export default class GooglePublisherTag extends Component {
     }
 
     this.removeSlot();
-    googletag.destroySlots([this.slot]);
   }
 
   update(props) {
