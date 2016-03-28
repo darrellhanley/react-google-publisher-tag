@@ -156,7 +156,6 @@ var GooglePublisherTag = function (_Component) {
       }
 
       this.removeSlot();
-      googletag.destroySlots([this.slot]);
     }
   }, {
     key: 'update',
