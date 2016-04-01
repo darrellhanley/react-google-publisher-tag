@@ -95,7 +95,6 @@ export default class GooglePublisherTag extends Component {
 
     sizeMap: React.PropTypes.array,
     dimensions: React.PropTypes.array,  // [[300, 600], [160, 600]]
-    targeting: React.PropTypes.object, // {key: value}
 
     minWindowWidth: React.PropTypes.number.isRequired,
     maxWindowWidth: React.PropTypes.number.isRequired,
@@ -201,14 +200,6 @@ export default class GooglePublisherTag extends Component {
 
       if(props.sizeMap) {
         slot.defineSizeMapping(props.sizeMap);
-      }
-
-      if (props.targeting) {
-        for (const key in props.targeting) {
-          if ({}.hasOwnProperty.call(props.targeting, key)) {
-            slot.setTargeting(key, props.targeting[key]);
-          }
-        }
       }
 
       // display new slot
