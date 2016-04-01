@@ -181,6 +181,8 @@ var GooglePublisherTag = function (_Component) {
       var windowWidth = window.innerWidth;
       var minWindowWidth = props.minWindowWidth;
       var maxWindowWidth = props.maxWindowWidth;
+      var targeting = props.targeting;
+      var sizeMap = props.sizeMap;
 
 
       if (minWindowWidth !== -1 && minWindowWidth < windowWidth) {
@@ -196,10 +198,10 @@ var GooglePublisherTag = function (_Component) {
 
       this.currentDimensions = dimensions;
 
-      if (this.slot && !props.sizeMap) {
+      if (this.slot && !sizeMap) {
         // remove current slot because dimensions is changed and current slot is old
         this.removeSlot();
-      } else if (this.slot && props.sizeMap) {
+      } else if (this.slot && sizeMap) {
         googletag.pubads().refresh([this.slot]);
       }
 
@@ -221,8 +223,16 @@ var GooglePublisherTag = function (_Component) {
         // prepare new slot
         var slot = this.slot = googletag.defineSlot(props.path, dimensions, id).addService(googletag.pubads());
 
-        if (props.sizeMap) {
-          slot.defineSizeMapping(props.sizeMap);
+        if (sizeMap) {
+          slot.defineSizeMapping(sizeMap);
+        }
+
+        if (targeting) {
+          for (var key in targeting) {
+            if ({}.hasOwnProperty.call(targeting, key)) {
+              slot.setTargeting(key, targeting[key]);
+            }
+          }
         }
 
         if (props.targeting) {
