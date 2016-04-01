@@ -158,7 +158,7 @@ export default class GooglePublisherTag extends Component {
 
     // filter by min and max width
     const windowWidth = window.innerWidth;
-    const { minWindowWidth, maxWindowWidth } = props;
+    const { minWindowWidth, maxWindowWidth, targeting, sizeMap} = props;
 
     if (minWindowWidth !== -1 && minWindowWidth < windowWidth) {
       dimensions = [];
@@ -174,10 +174,10 @@ export default class GooglePublisherTag extends Component {
     this.currentDimensions = dimensions;
 
 
-    if (this.slot && !props.sizeMap) {
+    if (this.slot && !sizeMap) {
       // remove current slot because dimensions is changed and current slot is old
       this.removeSlot();
-    } else if (this.slot && props.sizeMap) {
+    } else if (this.slot && sizeMap) {
       googletag.pubads().refresh([this.slot]);
     }
 
@@ -199,8 +199,16 @@ export default class GooglePublisherTag extends Component {
       // prepare new slot
       const slot = this.slot = googletag.defineSlot(props.path, dimensions, id).addService(googletag.pubads());
 
-      if(props.sizeMap) {
-        slot.defineSizeMapping(props.sizeMap);
+      if(sizeMap) {
+        slot.defineSizeMapping(sizeMap);
+      }
+
+      if (targeting) {
+        for (const key in targeting) {
+          if ({}.hasOwnProperty.call(targeting, key)) {
+            slot.setTargeting(key, targeting[key]);
+          }
+        }
       }
 
       if (props.targeting) {
