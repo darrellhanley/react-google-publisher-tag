@@ -225,6 +225,14 @@ var GooglePublisherTag = function (_Component) {
           slot.defineSizeMapping(props.sizeMap);
         }
 
+        if (props.targeting) {
+          for (var key in props.targeting) {
+            if ({}.hasOwnProperty.call(props.targeting, key)) {
+              slot.setTargeting(key, props.targeting[key]);
+            }
+          }
+        }
+
         // display new slot
         googletag.display(id);
         googletag.pubads().refresh([slot]);
@@ -270,6 +278,7 @@ GooglePublisherTag.propTypes = {
 
   sizeMap: _react2.default.PropTypes.array,
   dimensions: _react2.default.PropTypes.array, // [[300, 600], [160, 600]]
+  targeting: _react2.default.PropTypes.object, // {key: value}
 
   minWindowWidth: _react2.default.PropTypes.number.isRequired,
   maxWindowWidth: _react2.default.PropTypes.number.isRequired
