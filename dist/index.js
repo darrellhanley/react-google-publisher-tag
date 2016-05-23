@@ -141,6 +141,10 @@ var GooglePublisherTag = function (_Component) {
 
         _this2.update(_this2.props);
       });
+
+      document.addEventListener('refreshAds', function () {
+        this.refreshSlot();
+      });
     }
   }, {
     key: 'componentWillReceiveProps',
