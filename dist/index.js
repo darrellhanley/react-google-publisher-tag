@@ -143,9 +143,7 @@ var GooglePublisherTag = function (_Component) {
       });
 
       if (this.props.allowRefresh) {
-        document.addEventListener('refreshAds', function () {
-          this.refreshSlot();
-        });
+        window.addEventListener('refreshAds', this.refreshSlot);
       }
     }
   }, {
@@ -159,6 +157,10 @@ var GooglePublisherTag = function (_Component) {
       // TODO sometimes can props changed
       if (this.props.responsive) {
         window.removeEventListener('resize', this.handleResize);
+      }
+
+      if (this.props.allowRefresh) {
+        window.removeEventListener('refreshAds', this.refreshSlot);
       }
 
       this.removeSlot();
