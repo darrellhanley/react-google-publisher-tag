@@ -142,9 +142,11 @@ var GooglePublisherTag = function (_Component) {
         _this2.update(_this2.props);
       });
 
-      document.addEventListener('refreshAds', function () {
-        this.refreshSlot();
-      });
+      if (this.props.allowRefresh) {
+        document.addEventListener('refreshAds', function () {
+          this.refreshSlot();
+        });
+      }
     }
   }, {
     key: 'componentWillReceiveProps',
@@ -295,7 +297,8 @@ GooglePublisherTag.propTypes = {
   targeting: _react2.default.PropTypes.object, // {key: value}
 
   minWindowWidth: _react2.default.PropTypes.number.isRequired,
-  maxWindowWidth: _react2.default.PropTypes.number.isRequired
+  maxWindowWidth: _react2.default.PropTypes.number.isRequired,
+  allowRefresh: _react2.default.PropTypes.bool
 };
 GooglePublisherTag.defaultProps = {
   format: Format.HORIZONTAL,
