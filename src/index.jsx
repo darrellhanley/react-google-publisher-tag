@@ -125,7 +125,7 @@ export default class GooglePublisherTag extends Component {
     });
 
     if (this.props.allowRefresh) {
-      window.addEventListener('refreshAds', this.refreshSlot);
+      window.addEventListener('refreshAds', this.refreshSlot.bind(this));
     }
   }
 
@@ -140,7 +140,7 @@ export default class GooglePublisherTag extends Component {
     }
 
     if(this.props.allowRefresh) {
-      window.removeEventListener('refreshAds', this.refreshSlot);
+      window.removeEventListener('refreshAds', this.refreshSlot.bind(this));
     }
 
     this.removeSlot();
