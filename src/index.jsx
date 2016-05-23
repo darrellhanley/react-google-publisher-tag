@@ -122,6 +122,10 @@ export default class GooglePublisherTag extends Component {
 
       this.update(this.props);
     });
+
+    document.addEventListener('refreshAds', function(){
+      this.refreshSlot();
+    });
   }
 
   componentWillReceiveProps(props) {
