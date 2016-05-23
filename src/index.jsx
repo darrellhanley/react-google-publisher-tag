@@ -99,6 +99,7 @@ export default class GooglePublisherTag extends Component {
 
     minWindowWidth: React.PropTypes.number.isRequired,
     maxWindowWidth: React.PropTypes.number.isRequired,
+    allowRefresh: React.PropTypes.bool,
   };
 
   static defaultProps = {
@@ -123,9 +124,9 @@ export default class GooglePublisherTag extends Component {
       this.update(this.props);
     });
 
-    document.addEventListener('refreshAds', function(){
-      this.refreshSlot();
-    });
+    if (this.props.allowRefresh) {
+      window.addEventListener('refreshAds', this.refreshSlot);
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -136,6 +137,10 @@ export default class GooglePublisherTag extends Component {
     // TODO sometimes can props changed
     if (this.props.responsive) {
       window.removeEventListener('resize', this.handleResize);
+    }
+
+    if(this.props.allowRefresh) {
+      window.removeEventListener('refreshAds', this.refreshSlot);
     }
 
     this.removeSlot();
